@@ -1,5 +1,5 @@
 #include "Entity.h"
-namespace CLI
+namespace IntervalDotNET
 {
     Entity::Entity(String^ name, float xPos, float yPos)
         : ManagedObject(new Core::Entity(string_to_char_array(name), xPos, yPos))

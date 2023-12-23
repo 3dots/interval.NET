@@ -2,7 +2,7 @@
 #include "ManagedObject.h"
 #include "../interval.NET.Core/Core.h"
 using namespace System;
-namespace CLI
+namespace IntervalDotNET
 {
     public ref class Entity : public ManagedObject<Core::Entity>
     {

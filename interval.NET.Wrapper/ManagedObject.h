@@ -1,7 +1,7 @@
 #pragma once
 
 using namespace System;
-namespace CLI {
+namespace IntervalDotNET {
 
     template<class T>
     public ref class ManagedObject

@@ -1,5 +1,5 @@
 ﻿using System;
-using CLI;
+using IntervalDotNET;
 namespace Sandbox
 {
     class Program
