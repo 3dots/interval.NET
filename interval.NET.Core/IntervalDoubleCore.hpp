@@ -23,5 +23,9 @@ namespace Core
 		double lower() const;
 
 		static IntervalDoubleCore Add(IntervalDoubleCore* x, IntervalDoubleCore* y);
+		static IntervalDoubleCore Subtract(IntervalDoubleCore* x, IntervalDoubleCore* y);
+		static IntervalDoubleCore Multiply(IntervalDoubleCore* x, IntervalDoubleCore* y);
+		static IntervalDoubleCore Divide(IntervalDoubleCore* x, IntervalDoubleCore* y);
+		static IntervalDoubleCore Pow(IntervalDoubleCore* x, int n);
 	};
 }

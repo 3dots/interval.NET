@@ -30,4 +30,28 @@ namespace Core
         interval<double> sum = ((*x).interval_)->intervalImp_ + ((*y).interval_)->intervalImp_;
         return IntervalDoubleCore(sum.lower(), sum.upper());
     }
+
+    IntervalDoubleCore IntervalDoubleCore::Subtract(IntervalDoubleCore* x, IntervalDoubleCore* y)
+    {
+        interval<double> diff = ((*x).interval_)->intervalImp_ - ((*y).interval_)->intervalImp_;
+        return IntervalDoubleCore(diff.lower(), diff.upper());
+    }
+
+    IntervalDoubleCore IntervalDoubleCore::Multiply(IntervalDoubleCore* x, IntervalDoubleCore* y)
+    {
+        interval<double> product = ((*x).interval_)->intervalImp_ * ((*y).interval_)->intervalImp_;
+        return IntervalDoubleCore(product.lower(), product.upper());
+    }
+
+    IntervalDoubleCore IntervalDoubleCore::Divide(IntervalDoubleCore* x, IntervalDoubleCore* y)
+    {
+        interval<double> division = ((*x).interval_)->intervalImp_ / ((*y).interval_)->intervalImp_;
+        return IntervalDoubleCore(division.lower(), division.upper());
+    }
+
+    IntervalDoubleCore IntervalDoubleCore::Pow(IntervalDoubleCore* x, int n)
+    {
+        interval<double> power = pow(((*x).interval_)->intervalImp_, n);
+        return IntervalDoubleCore(power.lower(), power.upper());
+    }
 }

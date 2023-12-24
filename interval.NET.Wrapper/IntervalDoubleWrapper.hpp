@@ -30,5 +30,9 @@ namespace IntervalDotNET
         }
 
         static IntervalDoubleWrapper^ Add(IntervalDoubleWrapper^ x, IntervalDoubleWrapper^ y);
+        static IntervalDoubleWrapper^ Subtract(IntervalDoubleWrapper^ x, IntervalDoubleWrapper^ y);
+        static IntervalDoubleWrapper^ Multiply(IntervalDoubleWrapper^ x, IntervalDoubleWrapper^ y);
+        static IntervalDoubleWrapper^ Divide(IntervalDoubleWrapper^ x, IntervalDoubleWrapper^ y);
+        static IntervalDoubleWrapper^ Pow(IntervalDoubleWrapper^ x, int n);
     };
 }
