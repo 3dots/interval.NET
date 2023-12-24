@@ -1,0 +1,8 @@
+[submodule "submodules/config"]
+	path = submodules/config
+	url = git@github.com:3dots/config.git
+	branch = develop
+[submodule "submodules/interval"]
+	path = submodules/interval
+	url = git@github.com:3dots/interval.git
+	branch = develop
