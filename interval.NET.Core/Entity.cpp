@@ -1,4 +1,4 @@
-#include "Entity.h"
+#include "Entity.hpp"
 #include <iostream>
 #include "boost/numeric/interval.hpp"
 using namespace boost::numeric;

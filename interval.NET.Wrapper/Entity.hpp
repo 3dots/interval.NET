@@ -1,6 +1,6 @@
 #pragma once
-#include "ManagedObject.h"
-#include "../interval.NET.Core/Core.h"
+#include "ManagedObject.hpp"
+#include "../interval.NET.Core/Core.hpp"
 using namespace System;
 namespace IntervalDotNET
 {
