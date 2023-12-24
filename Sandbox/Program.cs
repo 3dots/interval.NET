@@ -1,5 +1,5 @@
-﻿using System;
-using IntervalDotNET;
+﻿using interval.NET;
+using System;
 namespace Sandbox
 {
     class Program
@@ -12,15 +12,27 @@ namespace Sandbox
 
             //Console.WriteLine(e.Add(1e-100, 1e100) == 1e100);
 
-            IntervalDouble x = new IntervalDouble(1e100);
-            IntervalDouble y = new IntervalDouble(1e-100);
+            //IntervalDoubleWrapper x = new(1e100);
+            //IntervalDoubleWrapper y = new IntervalDoubleWrapper(1e-100);
 
-            IntervalDouble sum = IntervalDouble.Add(x, y);
+            //IntervalDoubleWrapper sum = IntervalDoubleWrapper.Add(x, y);
 
+            //Console.WriteLine(sum.Upper);
+            //Console.WriteLine(sum.Lower);
+
+            //sum = IntervalDoubleWrapper.Add(sum, y);
+
+            //Console.WriteLine(sum.Upper);
+            //Console.WriteLine(sum.Lower);
+
+            IntervalDouble x = new(1e100);
+            IntervalDouble y = new(1e-100);
+
+            IntervalDouble sum = x + y;
             Console.WriteLine(sum.Upper);
             Console.WriteLine(sum.Lower);
 
-            sum = IntervalDouble.Add(sum, y);
+            sum = sum + y;
 
             Console.WriteLine(sum.Upper);
             Console.WriteLine(sum.Lower);

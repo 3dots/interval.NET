@@ -121,14 +121,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Entity.hpp" />
-    <ClInclude Include="IntervalDouble.hpp" />
+    <ClInclude Include="IntervalDoubleWrapper.hpp" />
     <ClInclude Include="ManagedObject.hpp" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="Entity.cpp" />
-    <ClCompile Include="IntervalDouble.cpp" />
+    <ClCompile Include="IntervalDoubleWrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc" />

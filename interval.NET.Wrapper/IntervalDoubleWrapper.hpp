@@ -5,11 +5,11 @@ using namespace System;
 
 namespace IntervalDotNET
 {
-    public ref class IntervalDouble : public ManagedObject<Core::IntervalDouble>
+    public ref class IntervalDoubleWrapper : public ManagedObject<Core::IntervalDoubleCore>
     {
     public:
-        IntervalDouble(double v);
-        IntervalDouble(double lower, double upper);
+        IntervalDoubleWrapper(double v);
+        IntervalDoubleWrapper(double lower, double upper);
 
         property double Upper
         {
@@ -29,6 +29,6 @@ namespace IntervalDotNET
             }
         }
 
-        static IntervalDouble^ Add(IntervalDouble^ x, IntervalDouble^ y);
+        static IntervalDoubleWrapper^ Add(IntervalDoubleWrapper^ x, IntervalDoubleWrapper^ y);
     };
 }
