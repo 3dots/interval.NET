@@ -34,5 +34,7 @@ namespace IntervalDotNET
             {
             }
         }
+
+        double Add(double x, double y);
     };
 }

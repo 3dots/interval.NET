@@ -11,4 +11,10 @@ namespace IntervalDotNET
         Console::WriteLine("The Move method from the Wrapper was called!");
         m_Instance->Move(deltaX, deltaY);
     }
+
+    double Entity::Add(double x, double y)
+    {
+        Console::WriteLine("The Move method from the Wrapper was called!");
+        return m_Instance->Add(x, y);
+    }
 }

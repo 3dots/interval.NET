@@ -1,5 +1,8 @@
 #include "Entity.h"
 #include <iostream>
+#include "boost/numeric/interval.hpp"
+using namespace boost::numeric;
+using namespace interval_lib;
 namespace Core
 {
     Entity::Entity(const char* name, float xPos, float yPos)
@@ -13,5 +16,11 @@ namespace Core
         m_XPos += deltaX;
         m_YPos += deltaY;
         std::cout << "Moved " << m_Name << " to (" << m_XPos << ", " << m_YPos << ")." << std::endl;
+    }
+
+    double Entity::Add(double x, double y) {
+        interval<double> X = x;
+        interval<double> Y = y;
+        return (X + Y).upper();
     }
 }

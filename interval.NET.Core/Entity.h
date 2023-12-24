@@ -14,5 +14,6 @@ namespace Core
         void Move(float deltaX, float deltaY);
         inline float GetXPosition() const { return m_XPos; };
         inline float GetYPosition() const { return m_YPos; };
+        double Add(double x, double y);
     };
 }
