@@ -25,8 +25,10 @@ class Succession
 
         foreach (double point in points)
         {
+            string? format = "N15";
+            format = null;
             IntervalDouble dist = dist1(point);
-            Console.WriteLine($"{point} {dist}");
+            Console.WriteLine($"{point.ToString(format)} {dist}");
         }
 
     }
@@ -51,7 +53,7 @@ class Succession
     {
         if (p <= 0 || p >= 1) return new IntervalDouble(0);
 
-        IntervalDouble pI = new (p);
+        IntervalDouble pI = new(p);
         IntervalDouble p1mp = new IntervalDouble(1) - pI;
 
         if (n > m)
@@ -65,11 +67,11 @@ class Succession
             p1mp = tempI;
         }
 
-        IntervalDouble factor = new (1);
+        IntervalDouble factor = new(1);
         for (int n1 = 1; n1 <= n; n1++)
         {
             IntervalDouble num = new IntervalDouble(m + n1) * pI * p1mp;
-            IntervalDouble denom = new (n1);
+            IntervalDouble denom = new(n1);
             factor *= num / denom;
         }
 
