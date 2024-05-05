@@ -37,7 +37,6 @@ class Program
         //Console.WriteLine(sum.Upper);
         //Console.WriteLine(sum.Lower);
 
-        new Succession().Run();
-        Console.ReadKey();
+        new Succession().Run();        
     }
 }

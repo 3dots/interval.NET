@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="pythonnet" Version="3.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\interval.NET.Wrapper\interval.NET.Wrapper.vcxproj" />
     <ProjectReference Include="..\interval.NET\interval.NET.csproj" />
   </ItemGroup>
