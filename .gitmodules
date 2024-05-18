@@ -10,3 +10,95 @@
 	path = submodules/odeint
 	url = git@github.com:boostorg/odeint.git
 	branch = develop
+[submodule "submodules/type_traits"]
+	path = submodules/type_traits
+	url = git@github.com:boostorg/type_traits.git
+	branch = develop
+[submodule "submodules/ublas"]
+	path = submodules/ublas
+	url = git@github.com:boostorg/ublas.git
+	branch = develop
+[submodule "submodules/core"]
+	path = submodules/core
+	url = git@github.com:boostorg/core.git
+	branch = develop
+[submodule "submodules/serialization"]
+	path = submodules/serialization
+	url = git@github.com:boostorg/serialization.git
+	branch = develop
+[submodule "submodules/preprocessor"]
+	path = submodules/preprocessor
+	url = git@github.com:boostorg/preprocessor.git
+	branch = develop
+[submodule "submodules/mpl"]
+	path = submodules/mpl
+	url = git@github.com:boostorg/mpl.git
+	branch = develop
+[submodule "submodules/static_assert"]
+	path = submodules/static_assert
+	url = git@github.com:boostorg/static_assert.git
+	branch = develop
+[submodule "submodules/utility"]
+	path = submodules/utility
+	url = git@github.com:boostorg/utility.git
+	branch = develop
+[submodule "submodules/typeof"]
+	path = submodules/typeof
+	url = git@github.com:boostorg/typeof.git
+	branch = develop
+[submodule "submodules/units"]
+	path = submodules/units
+	url = git@github.com:boostorg/units.git
+	branch = develop
+[submodule "submodules/integer"]
+	path = submodules/integer
+	url = git@github.com:boostorg/integer.git
+	branch = develop
+[submodule "submodules/fusion"]
+	path = submodules/fusion
+	url = git@github.com:boostorg/fusion.git
+	branch = develop
+[submodule "submodules/range"]
+	path = submodules/range
+	url = git@github.com:boostorg/range.git
+	branch = develop
+[submodule "submodules/iterator"]
+	path = submodules/iterator
+	url = git@github.com:boostorg/iterator.git
+	branch = develop
+[submodule "submodules/concept_check"]
+	path = submodules/concept_check
+	url = git@github.com:boostorg/concept_check.git
+	branch = develop
+[submodule "submodules/assert"]
+	path = submodules/assert
+	url = git@github.com:boostorg/assert
+	branch = develop
+[submodule "submodules/detail"]
+	path = submodules/detail
+	url = git@github.com:boostorg/detail
+	branch = develop
+[submodule "submodules/function_types"]
+	path = submodules/function_types
+	url = git@github.com:boostorg/function_types
+	branch = develop
+[submodule "submodules/throw_exception"]
+	path = submodules/throw_exception
+	url = git@github.com:boostorg/throw_exception
+	branch = develop
+[submodule "submodules/math"]
+	path = submodules/math
+	url = git@github.com:boostorg/math
+	branch = develop
+[submodule "submodules/multi_array"]
+	path = submodules/multi_array
+	url = git@github.com:boostorg/multi_array
+	branch = develop
+[submodule "submodules/array"]
+	path = submodules/array
+	url = git@github.com:boostorg/array
+	branch = develop
+[submodule "submodules/functional"]
+	path = submodules/functional
+	url = git@github.com:boostorg/functional
+	branch = develop
