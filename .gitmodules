@@ -6,3 +6,7 @@
 	path = submodules/interval
 	url = git@github.com:3dots/interval.git
 	branch = develop
+[submodule "submodules/odeint"]
+	path = submodules/odeint
+	url = git@github.com:boostorg/odeint.git
+	branch = develop
