@@ -32,9 +32,6 @@
     <ClCompile Include="AssemblyInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Entity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="IntervalDoubleWrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
