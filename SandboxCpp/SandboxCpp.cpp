@@ -4,6 +4,20 @@
 using namespace std;
 using namespace boost::numeric::odeint;
 
+
+class TestSystem 
+{
+public:
+    TestSystem() {
+        
+    }
+
+    void operator() (const double x, double& dxdt, const double t) 
+    {
+        dxdt = 3.0 / (2.0 * t * t) + x / (2.0 * t);
+    }
+};
+
 void rhs(const double x, double& dxdt, const double t)
 {
     dxdt = 3.0 / (2.0 * t * t) + x / (2.0 * t);
@@ -20,6 +34,7 @@ typedef runge_kutta_dopri5< double > stepper_type;
 int main()
 {
     double x = 0.0;
+    TestSystem s;
     integrate_adaptive(make_controlled(1E-12, 1E-12, stepper_type()),
-        rhs, x, 1.0, 10.0, 0.1, write_cout);
+        s, x, 1.0, 10.0, 0.1, write_cout);
 }

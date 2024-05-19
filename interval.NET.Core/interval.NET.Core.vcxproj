@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\repos\2024\interval.NET\submodules\config\include;C:\repos\2024\interval.NET\submodules\interval\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\repos\2024\interval.NET\submodules\concept_check\include;C:\repos\2024\interval.NET\submodules\iterator\include;C:\repos\2024\interval.NET\submodules\range\include;C:\repos\2024\interval.NET\submodules\fusion\include;C:\repos\2024\interval.NET\submodules\integer\include;C:\repos\2024\interval.NET\submodules\units\include;C:\repos\2024\interval.NET\submodules\typeof\include;C:\repos\2024\interval.NET\submodules\utility\include;C:\repos\2024\interval.NET\submodules\static_assert\include;C:\repos\2024\interval.NET\submodules\mpl\include;C:\repos\2024\interval.NET\submodules\preprocessor\include;C:\repos\2024\interval.NET\submodules\serialization\include;C:\repos\2024\interval.NET\submodules\core\include;C:\repos\2024\interval.NET\submodules\ublas\include;C:\repos\2024\interval.NET\submodules\type_traits\include;C:\repos\2024\interval.NET\submodules\config\include;C:\repos\2024\interval.NET\submodules\assert\include;C:\repos\2024\interval.NET\submodules\detail\include;C:\repos\2024\interval.NET\submodules\function_types\include;C:\repos\2024\interval.NET\submodules\throw_exception\include;C:\repos\2024\interval.NET\submodules\math\include;C:\repos\2024\interval.NET\submodules\multi_array\include;C:\repos\2024\interval.NET\submodules\array\include;C:\repos\2024\interval.NET\submodules\functional\include;C:\repos\2024\interval.NET\submodules\odeint\include;C:\repos\2024\interval.NET\submodules\interval\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -129,11 +129,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Core.hpp" />
-    <ClInclude Include="Entity.hpp" />
     <ClInclude Include="IntervalDoubleCore.hpp" />
+    <ClInclude Include="OdeintCore.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IntervalDoubleCore.cpp" />
+    <ClCompile Include="OdeintCore.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

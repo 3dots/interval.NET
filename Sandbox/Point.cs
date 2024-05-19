@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Sandbox;
 
-class Point
+struct Point
 {
     public double X;
     public IntervalDouble Y;
