@@ -8,15 +8,16 @@ using System.Threading.Tasks;
 
 namespace interval.NET;
 
-static class Odeint
+public static class Odeint
 {
     static readonly double ERR_TOLERANCE = 1E-12;
 
     public delegate double SystemFunc(double x, double t);
+    public delegate void ObserverFunc(double x, double t);
 
-    static void IntegrateAdaptive(SystemFunc func)
+    public static void IntegrateAdaptive(SystemFunc systemFunc, double startX, double startT, double endT, double dt, ObserverFunc observerFunc)
     {
-        var w = new OdeintWrapper(Marshal.GetFunctionPointerForDelegate(func));
-        w.IntegrateAdaptive(ERR_TOLERANCE, ERR_TOLERANCE);
+        var w = new OdeintWrapper(Marshal.GetFunctionPointerForDelegate(systemFunc), Marshal.GetFunctionPointerForDelegate(observerFunc));
+        w.IntegrateAdaptive(ERR_TOLERANCE, ERR_TOLERANCE, startX, startT, endT, dt);
     }
 }

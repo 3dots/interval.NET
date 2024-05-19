@@ -1,6 +1,5 @@
 #pragma once
 #include "../interval.NET.Core/Core.hpp"
-using System::Runtime::InteropServices::GCHandle;
 
 namespace IntervalDotNET
 {
@@ -9,12 +8,11 @@ namespace IntervalDotNET
 	public ref class OdeintWrapper
 	{
 	private:
-		GCHandle SystemFuncHandle;
+		Core::System* m_SystemHolder;
+		Core::Observer* m_ObserverHolder;
 
 	public:
-		OdeintWrapper(System::IntPtr systemFunc) {
-			SystemFuncHandle = GCHandle::FromIntPtr(systemFunc);
-		}
+		OdeintWrapper(System::IntPtr systemFunc, System::IntPtr observerFunc);
 
 		~OdeintWrapper()
 		{
@@ -23,14 +21,24 @@ namespace IntervalDotNET
 
 		!OdeintWrapper()
 		{
-			delete SystemFuncHandle;
+			if (m_ObserverHolder != nullptr)
+			{
+				delete m_ObserverHolder;
+			}
+
+			if (m_SystemHolder != nullptr)
+			{
+				delete m_SystemHolder;
+			}
 		}
 
 		void IntegrateAdaptive(
-			double absError, 
-			double relError
+			double absError,
+			double relError,
+			double startX,
+			double startT,
+			double endT,
+			double dt
 		);
-
-		void system(double x, double& dxdt, double t);
 	};
 }

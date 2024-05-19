@@ -130,7 +130,9 @@
   <ItemGroup>
     <ClInclude Include="Core.hpp" />
     <ClInclude Include="IntervalDoubleCore.hpp" />
+    <ClInclude Include="Observer.hpp" />
     <ClInclude Include="OdeintCore.hpp" />
+    <ClInclude Include="System.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IntervalDoubleCore.cpp" />

@@ -2,6 +2,7 @@
 using Python.Runtime;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,40 +44,52 @@ class Succession
         points = LinSpace(distList[indexFirstRealValue].X, distList[indexLastRealValue].X, POINTS_NO_FOCUS);
         Compute(distList, points, dist1);
 
-        Runtime.PythonDLL = "C:\\Users\\3dot\\AppData\\Local\\Programs\\Python\\Python312\\python312.dll";
-        PythonEngine.Initialize();
-        using (Py.GIL())
-        using (PyModule scope = Py.CreateScope())
+        List<Point> integralPoints = new();
+        Odeint.IntegrateAdaptive((double x, double t) => dist1(t).Lower, 0, 0, 1, 0.001, (double x, double t) =>
         {
-            scope.Import("matplotlib.pyplot", "plt");
+            integralPoints.Add(new Point(t, new IntervalDouble(x)));
+        });
 
-            int count = distList.Count;
-            double[] pointsArr = new double[count];
-            double[] dist_lower = new double[count];
-            double[] dist_upper = new double[count];
-
-            for (int i = 0; i < distList.Count; i++)
-            {
-                Point dist = distList[i];
-                pointsArr[i] = dist.X;
-                dist_lower[i] = dist.Y.Lower;
-                dist_upper[i] = dist.Y.Upper;
-            }
-
-            PyObject pointsPy = pointsArr.ToPython();
-            PyObject dist_lowerPy = dist_lower.ToPython();
-            PyObject dist_upperPy = dist_upper.ToPython();
-
-            scope.Set(nameof(pointsPy), pointsPy);
-            scope.Set(nameof(dist_lowerPy), dist_lowerPy);
-            scope.Set(nameof(dist_upperPy), dist_upperPy);
-
-            scope.Exec($"plt.figure(figsize=(6, 8))");
-            scope.Exec($"plt.scatter({nameof(pointsPy)}, {nameof(dist_lowerPy)}, s=1)");
-            scope.Exec($"plt.scatter({nameof(pointsPy)}, {nameof(dist_upperPy)}, s=1)");
-            scope.Exec("plt.tight_layout()");
-            scope.Exec("plt.show()");
+        foreach (Point point in integralPoints)
+        {
+            Console.WriteLine(point.ToString());
         }
+        Console.ReadKey();
+
+        //Runtime.PythonDLL = "C:\\Users\\3dot\\AppData\\Local\\Programs\\Python\\Python312\\python312.dll";
+        //PythonEngine.Initialize();
+        //using (Py.GIL())
+        //using (PyModule scope = Py.CreateScope())
+        //{
+        //    scope.Import("matplotlib.pyplot", "plt");
+
+        //    int count = distList.Count;
+        //    double[] pointsArr = new double[count];
+        //    double[] dist_lower = new double[count];
+        //    double[] dist_upper = new double[count];
+
+        //    for (int i = 0; i < distList.Count; i++)
+        //    {
+        //        Point dist = distList[i];
+        //        pointsArr[i] = dist.X;
+        //        dist_lower[i] = dist.Y.Lower;
+        //        dist_upper[i] = dist.Y.Upper;
+        //    }
+
+        //    PyObject pointsPy = pointsArr.ToPython();
+        //    PyObject dist_lowerPy = dist_lower.ToPython();
+        //    PyObject dist_upperPy = dist_upper.ToPython();
+
+        //    scope.Set(nameof(pointsPy), pointsPy);
+        //    scope.Set(nameof(dist_lowerPy), dist_lowerPy);
+        //    scope.Set(nameof(dist_upperPy), dist_upperPy);
+
+        //    scope.Exec($"plt.figure(figsize=(6, 8))");
+        //    scope.Exec($"plt.scatter({nameof(pointsPy)}, {nameof(dist_lowerPy)}, s=1)");
+        //    scope.Exec($"plt.scatter({nameof(pointsPy)}, {nameof(dist_upperPy)}, s=1)");
+        //    scope.Exec("plt.tight_layout()");
+        //    scope.Exec("plt.show()");
+        //}
     }
 
     #endregion
@@ -112,8 +125,6 @@ class Succession
     #region Distributions
 
     IntervalDouble dist1(double p) => dist(p, M1, N1);
-    double dist1_lower(double p) => dist1(p).Lower;
-    double dist1_upper(double p) => dist1(p).Upper;
 
     IntervalDouble dist2(double p) => dist(p, M2, N2);
 
