@@ -5,14 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sandbox;
+namespace interval.NET;
 
-struct Point
+public struct RPoint
 {
     public double X;
     public IntervalDouble Y;
 
-    public Point(double x, IntervalDouble y)
+    public RPoint(double x, IntervalDouble y)
     {
         X = x;
         Y = y;

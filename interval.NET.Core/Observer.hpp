@@ -4,9 +4,10 @@ namespace Core
 	typedef void (*ObserverStep)(const double x, const double t);
 
 	class Observer {
-	public:
+	private:
 		ObserverStep Func;
 
+	public:
 		Observer(ObserverStep func) {
 			Func = func;
 		}

@@ -1,34 +1,36 @@
 #pragma once
 #include "../interval.NET.Core/Core.hpp"
+#include "IntervalSystemStepWrapper.hpp"
 
 namespace IntervalDotNET
 {
 	delegate double SystemFunc(double x, double t);
 
-	public ref class OdeintWrapper
+	public ref class OdeintIntervalWrapper
 	{
 	private:
-		Core::System* m_SystemHolder;
-		Core::Observer* m_ObserverHolder;
+		Core::IntervalSystem* m_SystemHolder;
+		Core::IntervalObserver* m_ObserverHolder;
 
 	public:
-		OdeintWrapper(System::IntPtr systemFunc, System::IntPtr observerFunc);
+		OdeintIntervalWrapper(System::IntPtr observerFunc);
 
-		~OdeintWrapper()
+		~OdeintIntervalWrapper()
 		{
-			this->!OdeintWrapper();
+			this->!OdeintIntervalWrapper();
 		}
 
-		!OdeintWrapper()
+		!OdeintIntervalWrapper()
 		{
 			if (m_ObserverHolder != nullptr) delete m_ObserverHolder;
 			if (m_SystemHolder != nullptr) delete m_SystemHolder;
 		}
 
 		void IntegrateAdaptive(
+			IntervalSystemStepWrapperFunc^ systemFunc,
 			double absError,
 			double relError,
-			double startX,
+			IntervalDoubleWrapper^ startX,
 			double startT,
 			double endT,
 			double dt

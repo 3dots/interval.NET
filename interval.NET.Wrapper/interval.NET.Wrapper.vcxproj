@@ -121,13 +121,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="IntervalDoubleWrapper.hpp" />
+    <ClInclude Include="IntervalSystemStepWrapper.hpp" />
     <ClInclude Include="ManagedObject.hpp" />
+    <ClInclude Include="OdeintIntervalWrapper.hpp" />
     <ClInclude Include="OdeintWrapper.hpp" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="IntervalDoubleWrapper.cpp" />
+    <ClCompile Include="IntervalSystemStepWrapper.cpp" />
+    <ClCompile Include="OdeintIntervalWrapper.cpp" />
     <ClCompile Include="OdeintWrapper.cpp" />
   </ItemGroup>
   <ItemGroup>

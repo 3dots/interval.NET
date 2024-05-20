@@ -130,6 +130,8 @@
   <ItemGroup>
     <ClInclude Include="Core.hpp" />
     <ClInclude Include="IntervalDoubleCore.hpp" />
+    <ClInclude Include="IntervalObserver.hpp" />
+    <ClInclude Include="IntervalSystem.hpp" />
     <ClInclude Include="Observer.hpp" />
     <ClInclude Include="OdeintCore.hpp" />
     <ClInclude Include="System.hpp" />

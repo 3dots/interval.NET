@@ -4,7 +4,7 @@ namespace interval.NET
 {
     public class IntervalDouble
     {
-        readonly IntervalDoubleWrapper _interval;
+        internal readonly IntervalDoubleWrapper _interval;
 
         public double Upper => _interval.Upper;
         public double Lower => _interval.Lower;

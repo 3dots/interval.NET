@@ -13,9 +13,9 @@ class Succession
 {
     #region Fields
 
-    static readonly int POINTS_NO_INITIAL = 1000;
+    static readonly int POINTS_NO_INITIAL = 500;
     static readonly double POS_THRESHOLD = 0.001;
-    static readonly int POINTS_NO_FOCUS = 1000;
+    static readonly int POINTS_NO_FOCUS = 500;
 
     static readonly int M1 = 1000;
     static readonly int N1 = 500;
@@ -35,7 +35,7 @@ class Succession
     public void Run()
     {
         double[] points = LinSpace(0, 1, POINTS_NO_INITIAL);
-        List<Point> distList = new();
+        List<RPoint> distList = new();
         Compute(distList, points, dist1);
 
         int indexFirstRealValue = distList.FindIndex(p => p.Y.Lower >= POS_THRESHOLD);
@@ -44,52 +44,42 @@ class Succession
         points = LinSpace(distList[indexFirstRealValue].X, distList[indexLastRealValue].X, POINTS_NO_FOCUS);
         Compute(distList, points, dist1);
 
-        List<Point> integralPoints = new();
-        Odeint.IntegrateAdaptive((double x, double t) => dist1(t).Lower, 0, 0, 1, 0.001, (double x, double t) =>
-        {
-            integralPoints.Add(new Point(t, new IntervalDouble(x)));
-        });
+        //List<RPoint> integralPoints = Odeint.IntegrateAdaptive((IntervalDouble x, double t) => dist1(t), new IntervalDouble(0), 0, 1, 0.001);
 
-        foreach (Point point in integralPoints)
+        Runtime.PythonDLL = "C:\\Users\\3dot\\AppData\\Local\\Programs\\Python\\Python312\\python312.dll";
+        PythonEngine.Initialize();
+        using (Py.GIL())
+        using (PyModule scope = Py.CreateScope())
         {
-            Console.WriteLine(point.ToString());
+            scope.Import("matplotlib.pyplot", "plt");
+
+            int count = distList.Count;
+            double[] pointsArr = new double[count];
+            double[] dist_lower = new double[count];
+            double[] dist_upper = new double[count];
+
+            for (int i = 0; i < distList.Count; i++)
+            {
+                RPoint dist = distList[i];
+                pointsArr[i] = dist.X;
+                dist_lower[i] = dist.Y.Lower;
+                dist_upper[i] = dist.Y.Upper;
+            }
+
+            PyObject pointsPy = pointsArr.ToPython();
+            PyObject dist_lowerPy = dist_lower.ToPython();
+            PyObject dist_upperPy = dist_upper.ToPython();
+
+            scope.Set(nameof(pointsPy), pointsPy);
+            scope.Set(nameof(dist_lowerPy), dist_lowerPy);
+            scope.Set(nameof(dist_upperPy), dist_upperPy);
+
+            scope.Exec($"plt.figure(figsize=(6, 8))");
+            scope.Exec($"plt.scatter({nameof(pointsPy)}, {nameof(dist_lowerPy)}, s=1)");
+            scope.Exec($"plt.scatter({nameof(pointsPy)}, {nameof(dist_upperPy)}, s=1)");
+            scope.Exec("plt.tight_layout()");
+            scope.Exec("plt.show()");
         }
-        Console.ReadKey();
-
-        //Runtime.PythonDLL = "C:\\Users\\3dot\\AppData\\Local\\Programs\\Python\\Python312\\python312.dll";
-        //PythonEngine.Initialize();
-        //using (Py.GIL())
-        //using (PyModule scope = Py.CreateScope())
-        //{
-        //    scope.Import("matplotlib.pyplot", "plt");
-
-        //    int count = distList.Count;
-        //    double[] pointsArr = new double[count];
-        //    double[] dist_lower = new double[count];
-        //    double[] dist_upper = new double[count];
-
-        //    for (int i = 0; i < distList.Count; i++)
-        //    {
-        //        Point dist = distList[i];
-        //        pointsArr[i] = dist.X;
-        //        dist_lower[i] = dist.Y.Lower;
-        //        dist_upper[i] = dist.Y.Upper;
-        //    }
-
-        //    PyObject pointsPy = pointsArr.ToPython();
-        //    PyObject dist_lowerPy = dist_lower.ToPython();
-        //    PyObject dist_upperPy = dist_upper.ToPython();
-
-        //    scope.Set(nameof(pointsPy), pointsPy);
-        //    scope.Set(nameof(dist_lowerPy), dist_lowerPy);
-        //    scope.Set(nameof(dist_upperPy), dist_upperPy);
-
-        //    scope.Exec($"plt.figure(figsize=(6, 8))");
-        //    scope.Exec($"plt.scatter({nameof(pointsPy)}, {nameof(dist_lowerPy)}, s=1)");
-        //    scope.Exec($"plt.scatter({nameof(pointsPy)}, {nameof(dist_upperPy)}, s=1)");
-        //    scope.Exec("plt.tight_layout()");
-        //    scope.Exec("plt.show()");
-        //}
     }
 
     #endregion
@@ -110,11 +100,11 @@ class Succession
         return result;
     }
 
-    void Compute(List<Point> list, double[] points, Func<double, IntervalDouble> dist)
+    void Compute(List<RPoint> list, double[] points, Func<double, IntervalDouble> dist)
     {
         foreach (double point in points)
         {
-            list.Add(new Point(point, dist(point)));
+            list.Add(new RPoint(point, dist(point)));
         }
     }
 
@@ -156,6 +146,7 @@ class Succession
 
         factor *= new IntervalDouble(m + n + 1) * IntervalDouble.Pow(pI, m - n);
 
+        //Console.WriteLine($"dist\t{factor.Lower}\t{factor.Upper}\t{p}");
         return factor;
     }
 

@@ -30,6 +30,12 @@
     <ClInclude Include="Observer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IntervalSystem.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IntervalObserver.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IntervalDoubleCore.cpp">

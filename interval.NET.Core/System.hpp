@@ -1,14 +1,13 @@
-#include <functional>
-
 #pragma once
 namespace Core
 {
 	typedef double (*SystemStep)(const double x, const double t);
 
 	class System {
-	public:
+	private:
 		SystemStep Func;
 
+	public:		
 		System(SystemStep func) {
 			Func = func;
 		}

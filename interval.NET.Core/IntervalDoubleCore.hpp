@@ -13,10 +13,7 @@ namespace Core
 		
         ~IntervalDoubleCore()
         {
-            if (interval_ != nullptr)
-            {
-                delete interval_;
-            }
+            if (interval_ != nullptr) delete interval_;
         }
 
 		double upper() const;

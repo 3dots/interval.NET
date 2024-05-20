@@ -3,3 +3,5 @@
 #include "OdeintCore.hpp"
 #include "System.hpp"
 #include "Observer.hpp"
+#include "IntervalSystem.hpp"
+#include "IntervalObserver.hpp"
