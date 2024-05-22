@@ -6,37 +6,13 @@ class Program
 {
     static void Main(string[] args)
     {
-        //Entity e = new Entity("The Wallman", 20, 35);
-        //e.Move(5, -10);
-        //Console.WriteLine(e.XPosition + " " + e.YPosition);
+        IntervalDouble x = new IntervalDouble(double.NaN);
 
-        //Console.WriteLine(e.Add(1e-100, 1e100) == 1e100);
+        Console.WriteLine(x);
 
-        //IntervalDoubleWrapper x = new(1e100);
-        //IntervalDoubleWrapper y = new IntervalDoubleWrapper(1e-100);
-
-        //IntervalDoubleWrapper sum = IntervalDoubleWrapper.Add(x, y);
-
-        //Console.WriteLine(sum.Upper);
-        //Console.WriteLine(sum.Lower);
-
-        //sum = IntervalDoubleWrapper.Add(sum, y);
-
-        //Console.WriteLine(sum.Upper);
-        //Console.WriteLine(sum.Lower);
-
-        //IntervalDouble x = new(1e100);
-        //IntervalDouble y = new(1e-100);
-
-        //IntervalDouble sum = x + y;
-        //Console.WriteLine(sum.Upper);
-        //Console.WriteLine(sum.Lower);
-
-        //sum = sum + y;
-
-        //Console.WriteLine(sum.Upper);
-        //Console.WriteLine(sum.Lower);
-
-        new Succession().Run();        
+        //new Succession().Run();
+        
+        Console.WriteLine("Press any key to exit.");
+        Console.ReadKey();
     }
 }

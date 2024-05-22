@@ -136,8 +136,6 @@ class Succession
         return result;
     }
 
-    static readonly int NO_THREAD = 24;
-
     List<RPoint> Compute(string name, double[] points, Func<double, IntervalDouble> dist)
     {
         Console.WriteLine(name);

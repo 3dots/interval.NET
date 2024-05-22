@@ -21,7 +21,5 @@ namespace IntervalDotNET
 		m_SystemHolder = new Core::IntervalSystem(static_cast<Core::IntervalSystemStep>(stubPointer.ToPointer()));
 
 		Core::OdeintCore::IntegrateAdaptive(absError, relError, *m_SystemHolder, startX->GetInstance(), startT, endT, dt, *m_ObserverHolder);
-		GC::KeepAlive(systemStepWrapper);
-		GC::KeepAlive(ManagedFunc);
 	}
 }
