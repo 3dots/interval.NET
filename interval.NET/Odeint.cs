@@ -38,23 +38,29 @@ public static class Odeint
 
     public static List<RPoint> IntegrateAdaptive(IntervalSystemFunc systemFunc, IntervalDouble startX, double startT, double endT, double dt)
     {
+        return IntegrateAdaptive(systemFunc, startX, startT, endT, dt, ERR_TOLERANCE, ERR_TOLERANCE);
+    }
+
+    public static List<RPoint> IntegrateAdaptive(IntervalSystemFunc systemFunc, IntervalDouble startX, double startT, double endT, double dt, double absError, double relError)
+    {
         List<RPoint> results = new();
         IntervalObserverFunc observer = (double xLower, double xUpper, double t) => { //IntervalObserverStep signature from InternalObserver.hpp
-            Console.WriteLine($"observer\t{xLower}\t{xUpper}\t{t}");
-            IntervalDouble xLowerInt = new IntervalDouble(xLower) - new IntervalDouble(ERR_TOLERANCE);
-            IntervalDouble xUpperInt = new IntervalDouble(xUpper) + new IntervalDouble(ERR_TOLERANCE);
+            //Console.WriteLine($"observer\t{xLower}\t{xUpper}\t{t}");
+            IntervalDouble xLowerInt = new IntervalDouble(xLower) - new IntervalDouble(absError);
+            IntervalDouble xUpperInt = new IntervalDouble(xUpper) + new IntervalDouble(absError);
             results.Add(new RPoint(t, new IntervalDouble(xLowerInt.Lower, xUpperInt.Upper)));
         };
 
         IntervalSystemStepWrapperFunc system = (double xLower, double xUpper, double t) => {
-            Console.WriteLine($"system\t{xLower}\t{xUpper}\t{t}");
+            //Console.WriteLine($"system\t{xLower}\t{xUpper}\t{t}");
             IntervalDouble x = xUpper >= xLower ? new IntervalDouble(xLower, xUpper) : new IntervalDouble(0); //odeint discards this data anyway. TODO: make sense of this.
             return systemFunc(x, t)._interval;
         };
 
         var w = new OdeintIntervalWrapper(Marshal.GetFunctionPointerForDelegate(observer));
-        w.IntegrateAdaptive(system, ERR_TOLERANCE, ERR_TOLERANCE, startX._interval, startT, endT, dt);
+        w.IntegrateAdaptive(system, absError, relError, startX._interval, startT, endT, dt);
         GC.KeepAlive(observer);
+        GC.KeepAlive(system);
         return results;
     }
 }
