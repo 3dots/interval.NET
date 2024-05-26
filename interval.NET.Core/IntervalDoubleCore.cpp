@@ -11,6 +11,7 @@ namespace Core
         IntervalDoubleCoreImpl(double v) : intervalImp_(v) { }
         IntervalDoubleCoreImpl(double lower, double upper) : intervalImp_(lower, upper) { }
         IntervalDoubleCoreImpl(interval<double> i) : intervalImp_(i) { };
+        ~IntervalDoubleCoreImpl() { }
     };
 
     IntervalDoubleCore::IntervalDoubleCore(double v) {
@@ -49,9 +50,40 @@ namespace Core
         return IntervalDoubleCore(division.lower(), division.upper());
     }
 
-    IntervalDoubleCore IntervalDoubleCore::Pow(IntervalDoubleCore* x, int n)
+    bool IntervalDoubleCore::LessThan(IntervalDoubleCore* x, IntervalDoubleCore* y) 
     {
+        return ((*x).interval_)->intervalImp_ < ((*y).interval_)->intervalImp_;
+    }
+
+    bool IntervalDoubleCore::LessThanOrEqual(IntervalDoubleCore* x, IntervalDoubleCore* y)
+    {
+        return ((*x).interval_)->intervalImp_ <= ((*y).interval_)->intervalImp_;
+    }
+
+    bool IntervalDoubleCore::GreaterThan(IntervalDoubleCore* x, IntervalDoubleCore* y)
+    {
+        return ((*x).interval_)->intervalImp_ > ((*y).interval_)->intervalImp_;
+    }
+
+    bool IntervalDoubleCore::GreaterThanOrEqual(IntervalDoubleCore* x, IntervalDoubleCore* y)
+    {
+        return ((*x).interval_)->intervalImp_ >= ((*y).interval_)->intervalImp_;
+    }
+
+    bool IntervalDoubleCore::Subset(IntervalDoubleCore* innerInterval, IntervalDoubleCore* outerInterval)
+    {
+        return subset(((*innerInterval).interval_)->intervalImp_, ((*outerInterval).interval_)->intervalImp_);
+    }
+
+    IntervalDoubleCore IntervalDoubleCore::Pow(IntervalDoubleCore* x, int n)
+    {        
         interval<double> power = pow(((*x).interval_)->intervalImp_, n);
+        return IntervalDoubleCore(power.lower(), power.upper());
+    }
+
+    IntervalDoubleCore IntervalDoubleCore::Sqrt(IntervalDoubleCore* x)
+    {
+        interval<double> power = sqrt(((*x).interval_)->intervalImp_);
         return IntervalDoubleCore(power.lower(), power.upper());
     }
 }

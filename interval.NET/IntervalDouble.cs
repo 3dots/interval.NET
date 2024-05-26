@@ -31,29 +31,37 @@ namespace interval.NET
             return $"Median: {((_interval.Lower + _interval.Upper) / 2).ToString(format)} Error: {((_interval.Upper - _interval.Lower) / 2).ToString(format)} Lower: {_interval.Lower.ToString(format)} Upper: {_interval.Upper.ToString(format)}";
         }        
 
-        public static IntervalDouble operator +(IntervalDouble a, IntervalDouble b)
-        {
-            return new IntervalDouble(IntervalDoubleWrapper.Add(a._interval, b._interval));
-        }
+        public static IntervalDouble operator +(IntervalDouble a, IntervalDouble b) 
+            => new IntervalDouble(IntervalDoubleWrapper.Add(a._interval, b._interval));
 
         public static IntervalDouble operator -(IntervalDouble a, IntervalDouble b)
-        {
-            return new IntervalDouble(IntervalDoubleWrapper.Subtract(a._interval, b._interval));
-        }
+            => new IntervalDouble(IntervalDoubleWrapper.Subtract(a._interval, b._interval));
 
         public static IntervalDouble operator *(IntervalDouble a, IntervalDouble b)
-        {
-            return new IntervalDouble(IntervalDoubleWrapper.Multiply(a._interval, b._interval));
-        }
+            => new IntervalDouble(IntervalDoubleWrapper.Multiply(a._interval, b._interval));
 
         public static IntervalDouble operator /(IntervalDouble a, IntervalDouble b)
-        {
-            return new IntervalDouble(IntervalDoubleWrapper.Divide(a._interval, b._interval));
-        }
+            => new IntervalDouble(IntervalDoubleWrapper.Divide(a._interval, b._interval));
 
-        public static IntervalDouble Pow(IntervalDouble x, int n)
-        {
-            return new IntervalDouble(IntervalDoubleWrapper.Pow(x._interval, n));
-        }
+        public static bool operator <(IntervalDouble a, IntervalDouble b)
+            => IntervalDoubleWrapper.LessThan(a._interval, b._interval);
+
+        public static bool operator >(IntervalDouble a, IntervalDouble b)
+            => IntervalDoubleWrapper.GreaterThan(a._interval, b._interval);
+
+        public static bool operator <=(IntervalDouble a, IntervalDouble b)
+            => IntervalDoubleWrapper.LessThanOrEqual(a._interval, b._interval);
+
+        public static bool operator >=(IntervalDouble a, IntervalDouble b)
+            => IntervalDoubleWrapper.GreaterThanOrEqual(a._interval, b._interval);
+
+        public static bool Subset(IntervalDouble inner, IntervalDouble outer)
+            => IntervalDoubleWrapper.Subset(inner._interval, outer._interval);
+
+        public static IntervalDouble Pow(IntervalDouble x, int n) 
+            => new IntervalDouble(IntervalDoubleWrapper.Pow(x._interval, n));
+
+        public static IntervalDouble Sqrt(IntervalDouble x)
+            => new IntervalDouble(IntervalDoubleWrapper.Sqrt(x._interval));
     }
 }

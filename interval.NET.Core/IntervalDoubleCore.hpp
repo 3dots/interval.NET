@@ -23,6 +23,12 @@ namespace Core
 		static IntervalDoubleCore Subtract(IntervalDoubleCore* x, IntervalDoubleCore* y);
 		static IntervalDoubleCore Multiply(IntervalDoubleCore* x, IntervalDoubleCore* y);
 		static IntervalDoubleCore Divide(IntervalDoubleCore* x, IntervalDoubleCore* y);
+		static bool LessThan(IntervalDoubleCore* x, IntervalDoubleCore* y);
+		static bool LessThanOrEqual(IntervalDoubleCore* x, IntervalDoubleCore* y);
+		static bool GreaterThan(IntervalDoubleCore* x, IntervalDoubleCore* y);
+		static bool GreaterThanOrEqual(IntervalDoubleCore* x, IntervalDoubleCore* y);
+		static bool Subset(IntervalDoubleCore* innerInterval, IntervalDoubleCore* outerInterval);
 		static IntervalDoubleCore Pow(IntervalDoubleCore* x, int n);
+		static IntervalDoubleCore Sqrt(IntervalDoubleCore* x);
 	};
 }

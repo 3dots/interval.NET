@@ -7,7 +7,6 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace Sandbox;
 
@@ -36,6 +35,9 @@ class Succession
 
     public void Run()
     {
+        EvaluateDist(dist1);
+
+
         //double diff = -0.02;
         //Console.WriteLine($"{diff} {distDiff(diff)}");
         //double diff = 0.02;
@@ -44,12 +46,45 @@ class Succession
         //Console.WriteLine($"{distDiffIntegrand(0.65, -0.02)}");
 
         //List<RPoint> diffDist = new();
-        List<RPoint> diffDist = ComputeDist(nameof(diffDist), distDiff, -1, 1);
-        ShowGraphs(new List<List<RPoint>>
+        //List<RPoint> diffDist = ComputeDist(nameof(diffDist), distDiff, -1, 1);
+        //ShowGraphs(new List<List<RPoint>>
+        //{
+        //    ComputeDist(nameof(dist1), dist1),
+        //    ComputeDist(nameof(dist2), dist2)
+        //}, diffDist);
+    }
+
+    
+
+    #endregion
+
+    #region Helpers
+
+    double[] LinSpace(double start, double end, int numPoints)
+    {
+        double[] result = new double[numPoints];
+
+        double step = (end - start) / (numPoints - 1);
+
+        for (int i = 0; i < numPoints; ++i)
         {
-            ComputeDist(nameof(dist1), dist1),
-            ComputeDist(nameof(dist2), dist2)
-        }, diffDist);
+            result[i] = start + step * i;
+        }
+
+        return result;
+    }
+
+    List<RPoint> Compute(string name, double[] points, Func<double, IntervalDouble> dist)
+    {
+        Console.WriteLine(name);
+        ConcurrentBag<RPoint> bag = new();
+        Parallel.ForEach(points, point => {
+            IntervalDouble res = dist(point);
+            //Console.WriteLine($"{name} {point} {res.Lower} {res.Upper}");
+            bag.Add(new RPoint(point, res));
+        });
+
+        return bag.ToList();
     }
 
     List<RPoint> ComputeDist(string name, Func<double, IntervalDouble> dist, double start = 0, double end = 1)
@@ -76,7 +111,7 @@ class Succession
 
             scope.Exec("plt.figure(figsize=(6, 8))");
             scope.Exec("plt.subplot(2, 1, 1)");
-            scope.Exec("plt.title('p1, p2')");          
+            scope.Exec("plt.title('p1, p2')");
 
             foreach (List<RPoint> distList in dists)
             {
@@ -118,40 +153,103 @@ class Succession
         scope.Exec($"plt.scatter({nameof(pointsPy)}, {nameof(dist_upperPy)}, s=1)");
     }
 
-    #endregion
-
-    #region Helpers
-
-    double[] LinSpace(double start, double end, int numPoints)
+    IntervalDouble IntegrateAdaptiveHelper(Odeint.IntervalSystemFunc system)
     {
-        double[] result = new double[numPoints];
-
-        double step = (end - start) / (numPoints - 1);
-
-        for (int i = 0; i < numPoints; ++i)
-        {
-            result[i] = start + step * i;
-        }
-
-        return result;
+        return Odeint.IntegrateAdaptive(system, EnSystemPositivity.NonNegative, new IntervalDouble(0), 0, 1, 0.1);
     }
 
-    List<RPoint> Compute(string name, double[] points, Func<double, IntervalDouble> dist)
+    void EvaluateDist(Func<double, IntervalDouble> dist)
     {
-        Console.WriteLine(name);
-        ConcurrentBag<RPoint> bag = new();
-        Parallel.ForEach(points, point => {
-            IntervalDouble res = dist(point);
-            //Console.WriteLine($"{name} {point} {res.Lower} {res.Upper}");
-            bag.Add(new RPoint(point, res));
-        });
+        IntervalDouble mean = IntegrateAdaptiveHelper(MeanItegrand(dist));
+        IntervalDouble std = IntervalDouble.Sqrt(IntegrateAdaptiveHelper(VarianceIntegrand(mean, dist)));
 
-        return bag.ToList();
-    }    
+        Console.WriteLine($"{nameof(mean)}: {mean}");
+        Console.WriteLine($"{nameof(std)}: {std}");
+
+        Odeint.IntervalSystemFunc distSystem = (IntervalDouble x, double t) => dist(t);
+
+        double desired = 0.9999994;
+        double allowedError = 1e-8;
+        IntervalDouble threshold = new IntervalDouble(desired - allowedError, desired + allowedError);
+
+        IntervalDouble integral = new IntervalDouble(0);
+        double diffFromMean = 4.5 * std.Lower;
+        double step = 0.1 * std.Lower;
+
+        int i = 0;
+        int MAX_STEPS = 1000;
+        while (!IntervalDouble.Subset(integral, threshold) && i < MAX_STEPS)
+        {
+            double justBeforeThreshold = diffFromMean;
+            IntervalDouble integralJustBeforeThreshold = integral;
+            while (integral < threshold && i < MAX_STEPS)
+            {              
+                justBeforeThreshold = diffFromMean;
+                integralJustBeforeThreshold = integral;
+                integral = pAroundMean(distSystem, mean, diffFromMean);
+
+                diffFromMean += step;
+
+                Console.WriteLine($"ConfidenceInterval inner step: {i}, {diffFromMean}, {integral}");
+
+                if (i%10 == 0)
+                {
+                    Console.ReadKey();
+                }
+
+                i++;
+            }
+
+            if (IntervalDouble.Subset(integral, threshold)) break;            
+            diffFromMean = justBeforeThreshold;
+            integral = integralJustBeforeThreshold;
+            step /= 10;
+            if (IntervalDouble.Subset(integral, threshold)) break;
+            Console.WriteLine($"{nameof(diffFromMean)}: {diffFromMean}, {nameof(integralJustBeforeThreshold)}: {integralJustBeforeThreshold}");
+            
+            if (i%10 == 0)
+            {
+                Console.ReadKey();
+            }
+
+            i++;
+        }
+
+
+
+        if (!IntervalDouble.Subset(integral, threshold)) throw new Exception("Fail");
+
+        //pAroundMean(distSystem, mean, std);
+        //pAroundMean(distSystem, mean, new IntervalDouble(2) * std);
+        //pAroundMean(distSystem, mean, new IntervalDouble(3) * std);
+    }
+
+    IntervalDouble pAroundMean(Odeint.IntervalSystemFunc distSystem, IntervalDouble mean, double diffFromMean)
+    {
+        return Odeint.IntegrateAdaptive(distSystem, EnSystemPositivity.NonNegative, new IntervalDouble(0), mean.Lower - diffFromMean, mean.Upper + diffFromMean, 0.1);
+    }
 
     #endregion
 
     #region Distributions
+
+
+
+    Odeint.IntervalSystemFunc MeanItegrand(Func<double, IntervalDouble> dist)
+    {
+        return (IntervalDouble x, double t) =>
+        {
+            return new IntervalDouble(t) * dist(t);
+        };
+    }
+
+    Odeint.IntervalSystemFunc VarianceIntegrand(IntervalDouble mean, Func<double, IntervalDouble> dist)
+    {
+        return (IntervalDouble x, double t) =>
+        {
+            return (new IntervalDouble(t) * new IntervalDouble(t) - new IntervalDouble(2) * new IntervalDouble(t) * mean + mean * mean) * dist(t);
+        };
+    }
 
     IntervalDouble dist1(double p) => dist(p, M1, N1);
 
@@ -192,13 +290,8 @@ class Succession
     IntervalDouble distDiff(double diff)
     {
         double errTolerance = 1e-12;
-        List<RPoint> integralEvolution = Odeint.IntegrateAdaptive((IntervalDouble x, double t) => distDiffIntegrand(t, diff),
-            new IntervalDouble(0), 0, 1 - diff, 0.01, errTolerance, errTolerance);
-        //foreach (RPoint p in integralEvolution)
-        //{
-        //    Console.WriteLine(p.ToString());
-        //}
-        return integralEvolution.Last().Y;
+        return Odeint.IntegrateAdaptive((IntervalDouble x, double t) => distDiffIntegrand(t, diff), EnSystemPositivity.NonNegative,
+            new IntervalDouble(0), 0, 1 - diff, 0.01, errTolerance, errTolerance); ;
     }
 
     IntervalDouble distDiffIntegrand(double p, double diff) => dist1(p) * dist2(p - diff);

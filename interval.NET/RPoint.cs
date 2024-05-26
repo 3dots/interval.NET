@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace interval.NET;
 
-public struct RPoint
+public class RPoint
 {
     public double X;
     public IntervalDouble Y;

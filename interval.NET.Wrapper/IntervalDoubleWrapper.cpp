@@ -29,9 +29,40 @@ namespace IntervalDotNET
 		return gcnew IntervalDoubleWrapper(division.lower(), division.upper());
 	}
 
+	bool IntervalDoubleWrapper::LessThan(IntervalDoubleWrapper^ x, IntervalDoubleWrapper^ y) 
+	{
+		return Core::IntervalDoubleCore::LessThan(x->m_Instance, y->m_Instance);
+	}
+
+	bool IntervalDoubleWrapper::LessThanOrEqual(IntervalDoubleWrapper^ x, IntervalDoubleWrapper^ y)
+	{
+		return Core::IntervalDoubleCore::LessThanOrEqual(x->m_Instance, y->m_Instance);
+	}
+
+	bool IntervalDoubleWrapper::GreaterThan(IntervalDoubleWrapper^ x, IntervalDoubleWrapper^ y)
+	{
+		return Core::IntervalDoubleCore::GreaterThan(x->m_Instance, y->m_Instance);
+	}
+
+	bool IntervalDoubleWrapper::GreaterThanOrEqual(IntervalDoubleWrapper^ x, IntervalDoubleWrapper^ y)
+	{
+		return Core::IntervalDoubleCore::GreaterThanOrEqual(x->m_Instance, y->m_Instance);
+	}
+
+	bool IntervalDoubleWrapper::Subset(IntervalDoubleWrapper^ innerInterval, IntervalDoubleWrapper^ outerInterval)
+	{
+		return Core::IntervalDoubleCore::Subset(innerInterval->m_Instance, outerInterval->m_Instance);
+	}
+
 	IntervalDoubleWrapper^ IntervalDoubleWrapper::Pow(IntervalDoubleWrapper^ x, int n)
 	{
 		Core::IntervalDoubleCore power = Core::IntervalDoubleCore::Pow(x->m_Instance, n);
 		return gcnew IntervalDoubleWrapper(power.lower(), power.upper());
+	}
+
+	IntervalDoubleWrapper^ IntervalDoubleWrapper::Sqrt(IntervalDoubleWrapper^ x)
+	{
+		Core::IntervalDoubleCore sqrt = Core::IntervalDoubleCore::Sqrt(x->m_Instance);
+		return gcnew IntervalDoubleWrapper(sqrt.lower(), sqrt.upper());
 	}
 }

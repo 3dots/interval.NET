@@ -33,6 +33,12 @@ namespace IntervalDotNET
         static IntervalDoubleWrapper^ Subtract(IntervalDoubleWrapper^ x, IntervalDoubleWrapper^ y);
         static IntervalDoubleWrapper^ Multiply(IntervalDoubleWrapper^ x, IntervalDoubleWrapper^ y);
         static IntervalDoubleWrapper^ Divide(IntervalDoubleWrapper^ x, IntervalDoubleWrapper^ y);
+        static bool LessThan(IntervalDoubleWrapper^ x, IntervalDoubleWrapper^ y);
+        static bool LessThanOrEqual(IntervalDoubleWrapper^ x, IntervalDoubleWrapper^ y);
+        static bool GreaterThan(IntervalDoubleWrapper^ x, IntervalDoubleWrapper^ y);
+        static bool GreaterThanOrEqual(IntervalDoubleWrapper^ x, IntervalDoubleWrapper^ y);
+        static bool Subset(IntervalDoubleWrapper^ innerInterval, IntervalDoubleWrapper^ outerInterval);
         static IntervalDoubleWrapper^ Pow(IntervalDoubleWrapper^ x, int n);
+        static IntervalDoubleWrapper^ Sqrt(IntervalDoubleWrapper^ x);
     };
 }

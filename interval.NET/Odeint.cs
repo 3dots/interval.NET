@@ -41,7 +41,7 @@ public static class Odeint
 
         var w = new OdeintWrapper(Marshal.GetFunctionPointerForDelegate(systemFunc), Marshal.GetFunctionPointerForDelegate(observer));
         w.IntegrateAdaptive(absError, relError, startX, startT, endT, dt);
-        
+
         GC.KeepAlive(systemFunc);
         GC.KeepAlive(observer);
         return results;
@@ -67,24 +67,22 @@ public static class Odeint
     }
 
     public static List<RPoint> IntegrateAdaptiveEvo(
-        IntervalSystemFunc systemFunc, IntervalDouble startX, double startT, double endT, double dt)
-        => IntegrateAdaptive(systemFunc, startX, startT, endT, dt, DEFAULT_ERR_TOLERANCE, DEFAULT_ERR_TOLERANCE);
+        IntervalSystemFunc systemFunc, EnSystemPositivity sign, IntervalDouble startX, double startT, double endT, double dt)
+        => IntegrateAdaptiveEvo(systemFunc, sign, startX, startT, endT, dt, DEFAULT_ERR_TOLERANCE, DEFAULT_ERR_TOLERANCE);
 
-    public static List<RPoint> IntegrateAdaptive(IntervalSystemFunc systemFunc, IntervalDouble startX, double startT, double endT, double dt, double absError, double relError)
+    public static List<RPoint> IntegrateAdaptiveEvo(
+        IntervalSystemFunc systemFunc,
+        EnSystemPositivity sign,
+        IntervalDouble startX,
+        double startT,
+        double endT,
+        double dt,
+        double absError,
+        double relError)
     {
         List<RPoint> results = new();
-        IntervalObserverFunc observer = (double xLower, double xUpper, double t) => { //IntervalObserverStep signature from InternalObserver.hpp
-            //Console.WriteLine($"observer\t{xLower}\t{xUpper}\t{t}");
-            IntervalDouble xLowerInt = new IntervalDouble(xLower) - new IntervalDouble(absError);
-            IntervalDouble xUpperInt = new IntervalDouble(xUpper) + new IntervalDouble(absError);
-            results.Add(new RPoint(t, new IntervalDouble(xLowerInt.Lower, xUpperInt.Upper)));
-        };
-
-        IntervalSystemStepWrapperFunc system = (double xLower, double xUpper, double t) => {
-            //Console.WriteLine($"system\t{xLower}\t{xUpper}\t{t}");
-            IntervalDouble x = xUpper >= xLower ? new IntervalDouble(xLower, xUpper) : new IntervalDouble(0); //odeint discards this data anyway. TODO: make sense of this.
-            return systemFunc(x, t)._interval;
-        };
+        IntervalObserverFunc observer = IntervalListObserver(results, sign, absError);
+        IntervalSystemStepWrapperFunc system = IntervalSystemWrapper(systemFunc);
 
         var w = new OdeintIntervalWrapper(Marshal.GetFunctionPointerForDelegate(observer));
         w.IntegrateAdaptive(system, absError, relError, startX._interval, startT, endT, dt);
@@ -93,13 +91,44 @@ public static class Odeint
         return results;
     }
 
+    public static IntervalDouble IntegrateAdaptive(
+        IntervalSystemFunc systemFunc,
+        EnSystemPositivity sign,
+        IntervalDouble startX,
+        double startT,
+        double endT,
+        double dt)
+        => IntegrateAdaptive(systemFunc, sign, startX, startT, endT, dt, DEFAULT_ERR_TOLERANCE, DEFAULT_ERR_TOLERANCE);
+
+    public static IntervalDouble IntegrateAdaptive(
+        IntervalSystemFunc systemFunc,
+        EnSystemPositivity sign,
+        IntervalDouble startX,
+        double startT,
+        double endT,
+        double dt,
+        double absError,
+        double relError)
+    {
+        RPoint result = new(endT, new IntervalDouble(double.NaN));
+        IntervalObserverFunc observer = IntervalFinalObserver(result, sign, absError);
+        IntervalSystemStepWrapperFunc system = IntervalSystemWrapper(systemFunc);
+
+        var w = new OdeintIntervalWrapper(Marshal.GetFunctionPointerForDelegate(observer));
+        w.IntegrateAdaptive(system, absError, relError, startX._interval, startT, endT, dt);
+        GC.KeepAlive(observer);
+        GC.KeepAlive(system);
+        return result.Y;
+    }
+
     #endregion
 
     #region Helpers
 
     static ObserverFunc ListObserver(List<RPoint> results, EnSystemPositivity sign, double errTol)
     {
-        return (double x, double t) => {
+        return (double x, double t) =>
+        {
             //Console.WriteLine($"{nameof(ListObserver)}\t{x}\t{t}");           
             results.Add(new RPoint(t, FromDouble(x, sign, errTol)));
         };
@@ -107,7 +136,8 @@ public static class Odeint
 
     static ObserverFunc FinalObserver(RPoint endResult, EnSystemPositivity sign, double errTol)
     {
-        return (double x, double t) => {
+        return (double x, double t) =>
+        {
             //Console.WriteLine($"{nameof(FinalObserver)}\t{x}\t{t}");
             if (t == endResult.X)
             {
@@ -123,19 +153,10 @@ public static class Odeint
         IntervalDouble xInt = new IntervalDouble(x);
 
         IntervalDouble xLower = xInt - new IntervalDouble(errTol);
-        if ((sign == EnSystemPositivity.NonNegative || sign == EnSystemPositivity.Positive) && xLower.Lower < 0) 
+        if ((sign == EnSystemPositivity.NonNegative || sign == EnSystemPositivity.Positive) && xLower.Lower < 0)
             lower = 0;
-        else 
-            lower = xLower.Lower;
-
-        if (sign == EnSystemPositivity.NonPositive && x >= -errTol)
-        {
-            upper = 0;
-        }
         else
-        {
-            
-        }
+            lower = xLower.Lower;
 
         IntervalDouble xUpper = xInt + new IntervalDouble(errTol);
         if ((sign == EnSystemPositivity.NonPositive || sign == EnSystemPositivity.Negative) && xUpper.Upper > 0)
@@ -148,9 +169,22 @@ public static class Odeint
 
     static IntervalObserverFunc IntervalListObserver(List<RPoint> results, EnSystemPositivity sign, double errTol)
     {
-        return (double xLower, double xUpper, double t) => {
-            //Console.WriteLine($"{nameof(IntervalListObserver)}\t{x}\t{t}");           
+        return (double xLower, double xUpper, double t) =>
+        {
+            //Console.WriteLine($"{nameof(IntervalListObserver)}\t{xLower}\t{xUpper}\t{t}");  
             results.Add(new RPoint(t, FromInterval(xLower, xUpper, sign, errTol)));
+        };
+    }
+
+    static IntervalObserverFunc IntervalFinalObserver(RPoint endResult, EnSystemPositivity sign, double errTol)
+    {
+        return (double xLower, double xUpper, double t) =>
+        {
+            //Console.WriteLine($"{nameof(IntervalFinalObserver)}\t{xLower}\t{xUpper}\t{t}");
+            if (t == endResult.X)
+            {
+                endResult.Y = FromInterval(xLower, xUpper, sign, errTol);
+            }
         };
     }
 
@@ -159,28 +193,31 @@ public static class Odeint
         double lower;
         double upper;
 
-        if (sign == EnSystemPositivity.NonNegative)
-        {
+        IntervalDouble xLowerInt = new IntervalDouble(xLower) - new IntervalDouble(errTol);
+        if ((sign == EnSystemPositivity.NonNegative || sign == EnSystemPositivity.Positive) && xLowerInt.Lower < 0)
             lower = 0;
-        }
         else
-        {
-            IntervalDouble xLowerInt = new IntervalDouble(xLower);
-            xLowerInt -= new IntervalDouble(errTol);
             lower = xLowerInt.Lower;
-        }
 
-        if (sign == EnSystemPositivity.NonPositive)
-        {
+        IntervalDouble xUpperInt = new IntervalDouble(xUpper) + new IntervalDouble(errTol);
+        if ((sign == EnSystemPositivity.NonPositive || sign == EnSystemPositivity.Negative) && xUpperInt.Upper > 0)
             upper = 0;
-        }
         else
-        {
-            IntervalDouble xUpper = xInt + new IntervalDouble(DEFAULT_ERR_TOLERANCE);
-            upper = xUpper.Upper;
-        }
+            upper = xUpperInt.Upper;
 
         return new IntervalDouble(lower, upper);
+    }
+
+    static IntervalSystemStepWrapperFunc IntervalSystemWrapper(IntervalSystemFunc systemFunc)
+    {
+        return (double xLower, double xUpper, double t) =>
+        {
+            //Console.WriteLine($"system\t{xLower}\t{xUpper}\t{t}");
+            IntervalDouble x = xUpper >= xLower ?
+                new IntervalDouble(xLower, xUpper) :
+                new IntervalDouble(xUpper, xLower); //Idk wtf this is. Hopefully this blows up predictably.
+            return systemFunc(x, t)._interval;
+        };
     }
 
     #endregion 
