@@ -188,7 +188,9 @@ class Succession
                 integralJustBeforeThreshold = integral;
                 integral = pAroundMean(distSystem, mean, diffFromMean);
 
-                diffFromMean += step;
+                double newDiff = diffFromMean + step;
+                if (newDiff == diffFromMean) throw new Exception("Double add failed to do anything.");
+                diffFromMean = newDiff;
 
                 Console.WriteLine($"ConfidenceInterval inner step: {i}, {diffFromMean}, {integral}");
 
@@ -199,7 +201,7 @@ class Succession
 
                 i++;
             }
-
+            Console.WriteLine($"{nameof(integral)} past threshold: {integral}");
             if (IntervalDouble.Subset(integral, threshold)) break;            
             diffFromMean = justBeforeThreshold;
             integral = integralJustBeforeThreshold;
