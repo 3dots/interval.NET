@@ -85,7 +85,7 @@ public static class Odeint
         IntervalSystemStepWrapperFunc system = IntervalSystemWrapper(systemFunc);
 
         var w = new OdeintIntervalWrapper(Marshal.GetFunctionPointerForDelegate(observer));
-        w.IntegrateAdaptive(system, absError, relError, startX._interval, startT, endT, dt);
+        w.IntegrateAdaptive(system, absError, relError, startX, startT, endT, dt);
         GC.KeepAlive(observer);
         GC.KeepAlive(system);
         return results;
@@ -115,7 +115,7 @@ public static class Odeint
         IntervalSystemStepWrapperFunc system = IntervalSystemWrapper(systemFunc);
 
         var w = new OdeintIntervalWrapper(Marshal.GetFunctionPointerForDelegate(observer));
-        w.IntegrateAdaptive(system, absError, relError, startX._interval, startT, endT, dt);
+        w.IntegrateAdaptive(system, absError, relError, startX, startT, endT, dt);
         GC.KeepAlive(observer);
         GC.KeepAlive(system);
         return result.Y;
@@ -213,12 +213,16 @@ public static class Odeint
         return (double xLower, double xUpper, double t) =>
         {
             //Console.WriteLine($"system\t{xLower}\t{xUpper}\t{t}");
-            IntervalDouble x = xUpper >= xLower ?
-                new IntervalDouble(xLower, xUpper) :
-                new IntervalDouble(xUpper, xLower); //Idk wtf this is. Hopefully this blows up predictably.
-            return systemFunc(x, t)._interval;
+            
+            if (xLower > xUpper)
+            {
+                int i = 1;
+            }
+
+            return systemFunc(new IntervalDouble(xLower, xUpper), t);
         };
     }
 
-    #endregion 
+    #endregion
+
 }

@@ -21,7 +21,7 @@
     <ClInclude Include="ManagedObject.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IntervalDoubleWrapper.hpp">
+    <ClInclude Include="IntervalDouble.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="OdeintWrapper.hpp">
@@ -38,7 +38,7 @@
     <ClCompile Include="AssemblyInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IntervalDoubleWrapper.cpp">
+    <ClCompile Include="IntervalDouble.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OdeintWrapper.cpp">

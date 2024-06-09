@@ -23,6 +23,11 @@ namespace Core
 
 		void operator() (const interval_state_type &x, interval_state_type &dxdt, const double t)
 		{
+			if (x[0] > x[1]) 
+			{
+				int i = 1;
+			}
+
 			IntervalStruct res = Func(x[0], x[1], t);
 			dxdt[0] = res.lower;
 			dxdt[1] = res.upper;

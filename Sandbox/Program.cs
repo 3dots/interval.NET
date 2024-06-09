@@ -1,4 +1,4 @@
-﻿using interval.NET;
+﻿using IntervalDotNET;
 using System;
 namespace Sandbox;
 
@@ -6,9 +6,13 @@ class Program
 {
     static void Main(string[] args)
     {
-        //IntervalDouble x = new IntervalDouble(double.NaN);
+        //var x = new IntervalDouble(1.0);
+        //var y = new IntervalDouble(1e-35);
 
-        //Console.WriteLine(x);
+        //IntervalDouble sum = x + y;
+
+        //Console.WriteLine(sum);
+        //Console.WriteLine(sum.Lower == sum.Upper);
 
         new Succession().Run();
         

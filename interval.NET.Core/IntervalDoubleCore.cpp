@@ -5,85 +5,89 @@ using namespace interval_lib;
 
 namespace Core
 {
-    class IntervalDoubleCore::IntervalDoubleCoreImpl {  
-    public:
-        const interval<double> intervalImp_;
-        IntervalDoubleCoreImpl(double v) : intervalImp_(v) { }
-        IntervalDoubleCoreImpl(double lower, double upper) : intervalImp_(lower, upper) { }
-        IntervalDoubleCoreImpl(interval<double> i) : intervalImp_(i) { };
-        ~IntervalDoubleCoreImpl() { }
+    struct IntervalDoubleCore::IntervalDoubleCoreImpl {
+        interval<double> interval;
+        IntervalDoubleCoreImpl(double v) : interval(v) { }
+        IntervalDoubleCoreImpl(double lower, double upper) : interval(lower, upper) { }
     };
 
-    IntervalDoubleCore::IntervalDoubleCore(double v) {
-        interval_ = new IntervalDoubleCoreImpl(v);
+    IntervalDoubleCore::IntervalDoubleCore(double v) : intervalImp_(std::make_unique<IntervalDoubleCoreImpl>(v)) { }
+
+    IntervalDoubleCore::IntervalDoubleCore(double lower, double upper) : intervalImp_(std::make_unique<IntervalDoubleCoreImpl>(lower, upper)) { }
+
+    IntervalDoubleCore::~IntervalDoubleCore() = default;
+
+    double IntervalDoubleCore::upper() const { return intervalImp_->interval.upper(); };
+    double IntervalDoubleCore::lower() const { return intervalImp_->interval.lower(); };
+
+    double IntervalDoubleCore::Median(IntervalDoubleCore* x) 
+    {
+        return median((*x).intervalImp_->interval);
     }
 
-    IntervalDoubleCore::IntervalDoubleCore(double lower, double upper)
+    double IntervalDoubleCore::Width(IntervalDoubleCore* x)
     {
-        interval_ = new IntervalDoubleCoreImpl(lower, upper);
+        return width((*x).intervalImp_->interval);
     }
 
-    double IntervalDoubleCore::upper() const { return interval_->intervalImp_.upper(); };
-    double IntervalDoubleCore::lower() const { return interval_->intervalImp_.lower(); };
-
-    IntervalDoubleCore IntervalDoubleCore::Add(IntervalDoubleCore* x, IntervalDoubleCore* y)
+    IntervalDoubleCore* IntervalDoubleCore::Add(IntervalDoubleCore* x, IntervalDoubleCore* y)
     {
-        interval<double> sum = ((*x).interval_)->intervalImp_ + ((*y).interval_)->intervalImp_;
-        return IntervalDoubleCore(sum.lower(), sum.upper());
+        interval<double> sum = (*x).intervalImp_->interval + (*y).intervalImp_->interval;
+        return new IntervalDoubleCore(sum.lower(), sum.upper());
     }
 
-    IntervalDoubleCore IntervalDoubleCore::Subtract(IntervalDoubleCore* x, IntervalDoubleCore* y)
+    IntervalDoubleCore* IntervalDoubleCore::Subtract(IntervalDoubleCore* x, IntervalDoubleCore* y)
     {
-        interval<double> diff = ((*x).interval_)->intervalImp_ - ((*y).interval_)->intervalImp_;
-        return IntervalDoubleCore(diff.lower(), diff.upper());
+        interval<double> diff = (*x).intervalImp_->interval - (*y).intervalImp_->interval;
+        return new IntervalDoubleCore(diff.lower(), diff.upper());
     }
 
-    IntervalDoubleCore IntervalDoubleCore::Multiply(IntervalDoubleCore* x, IntervalDoubleCore* y)
+    IntervalDoubleCore* IntervalDoubleCore::Multiply(IntervalDoubleCore* x, IntervalDoubleCore* y)
     {
-        interval<double> product = ((*x).interval_)->intervalImp_ * ((*y).interval_)->intervalImp_;
-        return IntervalDoubleCore(product.lower(), product.upper());
+        interval<double> product = (*x).intervalImp_->interval * (*y).intervalImp_->interval;
+        return new IntervalDoubleCore(product.lower(), product.upper());
     }
 
-    IntervalDoubleCore IntervalDoubleCore::Divide(IntervalDoubleCore* x, IntervalDoubleCore* y)
+    IntervalDoubleCore* IntervalDoubleCore::Divide(IntervalDoubleCore* x, IntervalDoubleCore* y)
     {
-        interval<double> division = ((*x).interval_)->intervalImp_ / ((*y).interval_)->intervalImp_;
-        return IntervalDoubleCore(division.lower(), division.upper());
+        interval<double> division = (*x).intervalImp_->interval / (*y).intervalImp_->interval;
+        return new IntervalDoubleCore(division.lower(), division.upper());
     }
 
     bool IntervalDoubleCore::LessThan(IntervalDoubleCore* x, IntervalDoubleCore* y) 
     {
-        return ((*x).interval_)->intervalImp_ < ((*y).interval_)->intervalImp_;
+        return (*x).intervalImp_->interval < (*y).intervalImp_->interval;
     }
 
     bool IntervalDoubleCore::LessThanOrEqual(IntervalDoubleCore* x, IntervalDoubleCore* y)
     {
-        return ((*x).interval_)->intervalImp_ <= ((*y).interval_)->intervalImp_;
+        return (*x).intervalImp_->interval <= (*y).intervalImp_->interval;
     }
 
     bool IntervalDoubleCore::GreaterThan(IntervalDoubleCore* x, IntervalDoubleCore* y)
     {
-        return ((*x).interval_)->intervalImp_ > ((*y).interval_)->intervalImp_;
+        return (*x).intervalImp_->interval > (*y).intervalImp_->interval;
     }
 
     bool IntervalDoubleCore::GreaterThanOrEqual(IntervalDoubleCore* x, IntervalDoubleCore* y)
     {
-        return ((*x).interval_)->intervalImp_ >= ((*y).interval_)->intervalImp_;
+        return (*x).intervalImp_->interval >= (*y).intervalImp_->interval;
     }
 
     bool IntervalDoubleCore::Subset(IntervalDoubleCore* innerInterval, IntervalDoubleCore* outerInterval)
     {
-        return subset(((*innerInterval).interval_)->intervalImp_, ((*outerInterval).interval_)->intervalImp_);
+        return subset((*innerInterval).intervalImp_->interval, (*outerInterval).intervalImp_->interval);
     }
 
-    IntervalDoubleCore IntervalDoubleCore::Pow(IntervalDoubleCore* x, int n)
+    IntervalDoubleCore* IntervalDoubleCore::Pow(IntervalDoubleCore* x, int n)
     {        
-        interval<double> power = pow(((*x).interval_)->intervalImp_, n);
-        return IntervalDoubleCore(power.lower(), power.upper());
+        interval<double> power = pow((*x).intervalImp_->interval, n);
+        return new IntervalDoubleCore(power.lower(), power.upper());
     }
 
-    IntervalDoubleCore IntervalDoubleCore::Sqrt(IntervalDoubleCore* x)
+    IntervalDoubleCore* IntervalDoubleCore::Sqrt(IntervalDoubleCore* x)
     {
-        interval<double> power = sqrt(((*x).interval_)->intervalImp_);
-        return IntervalDoubleCore(power.lower(), power.upper());
+        interval<double> power = sqrt((*x).intervalImp_->interval);
+        return new IntervalDoubleCore(power.lower(), power.upper());
     }
 }

@@ -120,7 +120,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="IntervalDoubleWrapper.hpp" />
+    <ClInclude Include="IntervalDouble.hpp" />
     <ClInclude Include="IntervalSystemStepWrapper.hpp" />
     <ClInclude Include="ManagedObject.hpp" />
     <ClInclude Include="OdeintIntervalWrapper.hpp" />
@@ -129,7 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
-    <ClCompile Include="IntervalDoubleWrapper.cpp" />
+    <ClCompile Include="IntervalDouble.cpp" />
     <ClCompile Include="IntervalSystemStepWrapper.cpp" />
     <ClCompile Include="OdeintIntervalWrapper.cpp" />
     <ClCompile Include="OdeintWrapper.cpp" />

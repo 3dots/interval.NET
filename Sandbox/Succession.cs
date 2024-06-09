@@ -1,4 +1,5 @@
 ﻿using interval.NET;
+using IntervalDotNET;
 using Python.Runtime;
 using System;
 using System.Collections.Concurrent;
@@ -54,7 +55,7 @@ class Succession
         //}, diffDist);
     }
 
-    
+
 
     #endregion
 
@@ -78,7 +79,8 @@ class Succession
     {
         Console.WriteLine(name);
         ConcurrentBag<RPoint> bag = new();
-        Parallel.ForEach(points, point => {
+        Parallel.ForEach(points, point =>
+        {
             IntervalDouble res = dist(point);
             //Console.WriteLine($"{name} {point} {res.Lower} {res.Upper}");
             bag.Add(new RPoint(point, res));
@@ -183,7 +185,7 @@ class Succession
             double justBeforeThreshold = diffFromMean;
             IntervalDouble integralJustBeforeThreshold = integral;
             while (integral < threshold && i < MAX_STEPS)
-            {              
+            {
                 justBeforeThreshold = diffFromMean;
                 integralJustBeforeThreshold = integral;
                 integral = pAroundMean(distSystem, mean, diffFromMean);
@@ -202,13 +204,13 @@ class Succession
                 i++;
             }
             Console.WriteLine($"{nameof(integral)} past threshold: {integral}");
-            if (IntervalDouble.Subset(integral, threshold)) break;            
+            if (IntervalDouble.Subset(integral, threshold)) break;
             diffFromMean = justBeforeThreshold;
             integral = integralJustBeforeThreshold;
             step /= 10;
             if (IntervalDouble.Subset(integral, threshold)) break;
             Console.WriteLine($"{nameof(diffFromMean)}: {diffFromMean}, {nameof(integralJustBeforeThreshold)}: {integralJustBeforeThreshold}");
-            
+
             if (i%10 == 0)
             {
                 Console.ReadKey();

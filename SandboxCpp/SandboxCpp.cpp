@@ -1,37 +1,25 @@
 #include <iostream>
 #include <boost/numeric/odeint.hpp>
+#include <boost/numeric/interval.hpp>
 
 using namespace std;
 using namespace boost::numeric::odeint;
 
-void rhs(const double x, double& dxdt, const double t)
-{
-    dxdt = 3.0 / (2.0 * t * t) + x / (2.0 * t);
-}
+using namespace boost::numeric;
+using namespace interval_lib;
 
-void write_cout(const double& x, const double t)
-{
-    cout << t << '\t' << x << endl;
-}
+typedef interval< double > intervalDouble;
+typedef std::array< double, 2 > interval_state_type;
 
 class TestSystem
 {
-public:
-    TestSystem() {
-
-    }
-
-    void operator() (const double x, double& dxdt, const double t)
-    {
-        dxdt = dist(t, 1000, 500);
-    }
-
-    double dist(double p, int m, int n)
+private:
+    intervalDouble dist(intervalDouble p, int m, int n)
     {
         if (p <= 0 || p >= 1) return 0;
 
-        double pI = p;
-        double p1mp = 1 - pI;
+        intervalDouble pI = p;
+        intervalDouble p1mp = intervalDouble(1) - pI;
 
         if (n > m)
         {
@@ -39,23 +27,37 @@ public:
             m = n;
             n = tempInt;
 
-            double tempI = pI;
+            intervalDouble tempI = pI;
             pI = p1mp;
             p1mp = tempI;
         }
 
-        double factor = 1;
+        intervalDouble factor = 1;
         for (int n1 = 1; n1 <= n; n1++)
         {
-            double num = (m + n1) * pI * p1mp;
-            double denom = n1;
+            intervalDouble num = intervalDouble(m + n1) * pI * p1mp;
+            intervalDouble denom = n1;
             factor *= num / denom;
         }
 
-        factor *= (m + n + 1) * pow(pI, m - n);
+        factor *= intervalDouble(m + n + 1) * pow(pI, m - n);
 
         return factor;
     }
+
+public:
+    TestSystem() {
+
+    }
+
+    void operator() (const interval_state_type& x, interval_state_type& dxdt, const double t)
+    {
+        intervalDouble res = dist(intervalDouble(t), 1000, 500);
+        dxdt[0] = res.lower();
+        dxdt[1] = res.upper();
+    }
+
+    
 };
 
 class TestObserver
@@ -65,20 +67,36 @@ public:
 
     }
 
-    void operator() (const double x, const double t)
+    void operator() (const interval_state_type& x, const double t)
     {
-        cout << t << '\t' << x << endl;
+        cout 
+            << "t Median: " << t
+            << "\tx Lower: " << x[0] << "\tUpper: " << x[1]
+            << endl;
     }
 };
 
 // state_type = double
 typedef runge_kutta_dopri5< double > stepper_type;
 
+void print(intervalDouble& x) {
+    cout
+        << "Median: " << median(x) << "\tError: " << width(x) / 2 << endl;
+}
+
 int main()
 {
-    double x = 0.0;
+    /*intervalDouble x = 1;
+    intervalDouble y = 1e-35;
+
+    intervalDouble sum = x + y;
+    print(sum);*/
+
+    interval_state_type x;
+    x[0] = 0;
+    x[1] = 0;
     TestSystem s;
     TestObserver o;
-    integrate_adaptive(make_controlled(1E-12, 1E-12, stepper_type()),
+    integrate_adaptive(make_controlled(1e-12, 1e-12, stepper_type()),
         s, x, 0.0, 1.0, 0.001, o);
 }

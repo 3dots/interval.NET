@@ -10,7 +10,7 @@ namespace IntervalDotNET
 		IntervalSystemStepWrapperFunc^ systemFunc,
 		double absError,
 		double relError,
-		IntervalDoubleWrapper^ startX,
+		IntervalDouble^ startX,
 		double startT,
 		double endT,
 		double dt
