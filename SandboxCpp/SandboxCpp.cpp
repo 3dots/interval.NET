@@ -92,11 +92,11 @@ int main()
     intervalDouble sum = x + y;
     print(sum);*/
 
-    interval_state_type x;
+    /*interval_state_type x;
     x[0] = 0;
     x[1] = 0;
     TestSystem s;
     TestObserver o;
     integrate_adaptive(make_controlled(1e-12, 1e-12, stepper_type()),
-        s, x, 0.0, 1.0, 0.001, o);
+        s, x, 0.0, 1.0, 0.001, o);*/
 }

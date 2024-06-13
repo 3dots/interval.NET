@@ -20,7 +20,7 @@ $nsmgr.AddNameSpace("x", $xml.Project.xmlns)
 $node = $xml.SelectSingleNode("//x:AdditionalIncludeDirectories", $nsmgr)
 
 $dirs = $node.InnerText.Split(";");
-$elementToInsert = "C:\repos\2024\interval.NET\submodules\" + $repoLastPartOfName + "\include"
+$elementToInsert = "`$(SolutionDir)\submodules\" + $repoLastPartOfName + "\include"
 $index = $dirs.Length - 2;
 $newDirs = $dirs[0..($index-1)] + $elementToInsert + $dirs[$index..($dirs.Length-1)]
 
