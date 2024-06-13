@@ -1,5 +1,4 @@
-﻿using interval.NET;
-using IntervalDotNET;
+﻿using Interval.NET;
 using Python.Runtime;
 using System;
 using System.Collections.Concurrent;

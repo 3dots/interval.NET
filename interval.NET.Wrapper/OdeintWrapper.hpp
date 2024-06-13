@@ -1,37 +1,39 @@
 #pragma once
 #include "../interval.NET.Core/Core.hpp"
 
-namespace IntervalDotNET
+namespace Interval
 {
-	delegate double SystemFunc(double x, double t);
+	namespace NET {
+		delegate double SystemFunc(double x, double t);
 
-	public ref class OdeintWrapper
-	{
-	private:
-		Core::System* m_SystemHolder;
-		Core::Observer* m_ObserverHolder;
-
-	public:
-		OdeintWrapper(System::IntPtr systemFunc, System::IntPtr observerFunc);
-
-		~OdeintWrapper()
+		public ref class OdeintWrapper
 		{
-			this->!OdeintWrapper();
-		}
+		private:
+			Core::System* m_SystemHolder;
+			Core::Observer* m_ObserverHolder;
 
-		!OdeintWrapper()
-		{
-			if (m_ObserverHolder != nullptr) delete m_ObserverHolder;
-			if (m_SystemHolder != nullptr) delete m_SystemHolder;
-		}
+		public:
+			OdeintWrapper(System::IntPtr systemFunc, System::IntPtr observerFunc);
 
-		void IntegrateAdaptive(
-			double absError,
-			double relError,
-			double startX,
-			double startT,
-			double endT,
-			double dt
-		);
-	};
+			~OdeintWrapper()
+			{
+				this->!OdeintWrapper();
+			}
+
+			!OdeintWrapper()
+			{
+				if (m_ObserverHolder != nullptr) delete m_ObserverHolder;
+				if (m_SystemHolder != nullptr) delete m_SystemHolder;
+			}
+
+			void IntegrateAdaptive(
+				double absError,
+				double relError,
+				double startX,
+				double startT,
+				double endT,
+				double dt
+			);
+		};
+	}
 }

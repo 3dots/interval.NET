@@ -1,4 +1,4 @@
-﻿using IntervalDotNET;
+﻿using Interval.NET;
 using System;
 namespace Sandbox;
 

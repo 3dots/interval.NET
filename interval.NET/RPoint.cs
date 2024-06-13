@@ -1,12 +1,11 @@
-﻿using interval.NET;
-using IntervalDotNET;
+﻿using Interval.NET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace interval.NET;
+namespace Interval.NET;
 
 public class RPoint
 {

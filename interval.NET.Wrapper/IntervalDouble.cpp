@@ -1,6 +1,7 @@
 #include "IntervalDouble.hpp"
-namespace IntervalDotNET
+namespace Interval
 {
+	namespace NET {
 	IntervalDouble::IntervalDouble(double v) : ManagedObject(new Core::IntervalDoubleCore(v)) { }
 
 	IntervalDouble::IntervalDouble(double lower, double upper) : ManagedObject(new Core::IntervalDoubleCore(lower, upper)) { }
@@ -75,5 +76,6 @@ namespace IntervalDotNET
 	IntervalDouble^ IntervalDouble::Sqrt(IntervalDouble^ x)
 	{
 		return gcnew IntervalDouble(Core::IntervalDoubleCore::Sqrt(x->m_Instance));
+	}
 	}
 }

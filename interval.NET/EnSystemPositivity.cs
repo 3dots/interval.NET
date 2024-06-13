@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace interval.NET;
+namespace Interval.NET;
 
 public enum EnSystemPositivity
 {

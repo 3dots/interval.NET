@@ -1,21 +1,21 @@
 #pragma once
 #include "../interval.NET.Core/Core.hpp"
 #include "IntervalDouble.hpp"
-
-
-namespace IntervalDotNET
+namespace Interval
 {
-	public delegate IntervalDouble^ IntervalSystemStepWrapperFunc(const double xLower, const double xUpper, const double t);
+	namespace NET {
+		public delegate IntervalDouble^ IntervalSystemStepWrapperFunc(const double xLower, const double xUpper, const double t);
 
-	delegate Core::IntervalStruct IntervalSystemStepDelegate(const double xLower, const double xUpper, const double t);
+		delegate Core::IntervalStruct IntervalSystemStepDelegate(const double xLower, const double xUpper, const double t);
 
-	public ref class IntervalSystemStepWrapper
-	{
-	private:
-		IntervalSystemStepWrapperFunc^ Func;
-	public:
-		IntervalSystemStepWrapper(IntervalSystemStepWrapperFunc^ func);
+		public ref class IntervalSystemStepWrapper
+		{
+		private:
+			IntervalSystemStepWrapperFunc^ Func;
+		public:
+			IntervalSystemStepWrapper(IntervalSystemStepWrapperFunc^ func);
 
-		Core::IntervalStruct intervalSystemStep(const double xLower, const double xUpper, const double t);
-	};
+			Core::IntervalStruct intervalSystemStep(const double xLower, const double xUpper, const double t);
+		};
+	}
 }
